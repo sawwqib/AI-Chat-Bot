@@ -9,183 +9,212 @@
     <title>Chat Assistant</title>
     <style>
         :root {
-            --neon-purple: #A66CFF;
-            --cyber-blue: #6CDAEE;
-            --future-background: #0F0F1C;
-            --dark-surface: #1A1A2E;
-            --glow: 0 0 20px;
+            --primary: #6C63FF;
+            --secondary: #4FC3F7;
+            --dark-bg: #121212;
+            --surface: #1E1E1E;
+            --text-primary: #E0E0E0;
+            --text-secondary: #B0B0B0;
         }
     
         body {
             margin: 0;
             font-family: 'Inter', system-ui, sans-serif;
-            background: var(--future-background);
-            color: #F0F0F5;
+            background: var(--dark-bg);
+            color: var(--text-primary);
             line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
     
         .container {
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            height: 90vh;
+            width: 90%;
             max-width: 800px;
-            margin: 0 auto;
-            background: rgba(26, 26, 46, 0.98);
-            border: 1px solid rgba(166, 108, 255, 0.15);
-            backdrop-filter: blur(12px);
-            box-shadow: var(--glow) rgba(166, 108, 255, 0.05);
-            position: relative;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
-    
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                45deg,
-                transparent 45%,
-                rgba(166, 108, 255, 0.03) 50%,
-                transparent 55%
-            );
-            animation: grid-move 20s linear infinite;
+
+        .header {
+            padding: 1rem 2rem;
+            background: rgba(108, 99, 255, 0.1);
+            border-bottom: 1px solid rgba(108, 99, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .header .logo {
+            font-size: 1.8rem;
+            color: var(--primary);
         }
     
         .chatbox {
             flex: 1;
-            padding: 2rem;
+            padding: 1.5rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
-            position: relative;
-            z-index: 1;
+            gap: 1rem;
         }
     
         .chat-message {
-            padding: 1.25rem 1.75rem;
-            border-radius: 1.5rem;
-            max-width: 75%;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            max-width: 80%;
             word-wrap: break-word;
-            animation: messageAppear 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            animation: messageAppear 0.3s ease-out;
             position: relative;
-            transition: transform 0.2s ease, opacity 0.2s ease;
-            border: 1px solid transparent;
+            line-height: 1.5;
+            font-size: 0.95rem;
         }
     
         .user-message {
             align-self: flex-end;
-            background: rgba(166, 108, 255, 0.1);
-            border-color: rgba(166, 108, 255, 0.3);
-            box-shadow: var(--glow) rgba(166, 108, 255, 0.05),
-                        inset 0 0 12px rgba(166, 108, 255, 0.1);
+            background: rgba(108, 99, 255, 0.15);
+            color: var(--text-primary);
+            border: 1px solid rgba(108, 99, 255, 0.3);
         }
     
         .assistant-message {
             align-self: flex-start;
-            background: rgba(16, 16, 32, 0.4);
-            border-color: rgba(108, 218, 238, 0.2);
-            box-shadow: var(--glow) rgba(108, 218, 238, 0.03),
-                        inset 0 0 12px rgba(108, 218, 238, 0.05);
+            background: rgba(31, 31, 31, 0.8);
+            color: var(--text-primary);
+            border: 1px solid rgba(79, 195, 247, 0.2);
         }
     
         .input-area {
-            padding: 1.5rem;
-            border-top: 1px solid rgba(166, 108, 255, 0.1);
-            background: rgba(16, 16, 32, 0.7);
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(30, 30, 30, 0.9);
             display: flex;
-            gap: 1rem;
-            position: relative;
-            z-index: 1;
+            gap: 0.8rem;
         }
     
         .input-area input {
             flex: 1;
-            padding: 1rem 1.5rem;
-            border: 1px solid rgba(166, 108, 255, 0.2);
-            border-radius: 1.25rem;
-            background: rgba(26, 26, 46, 0.5);
-            color: #F0F0F5;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            border-radius: 0.8rem;
+            background: rgba(40, 40, 40, 0.8);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
         }
     
         .input-area input:focus {
-            border-color: var(--cyber-blue);
-            box-shadow: 0 0 20px rgba(108, 218, 238, 0.1);
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
         }
     
         .input-area button {
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.5rem;
             border: none;
-            border-radius: 1.25rem;
-            background: linear-gradient(135deg, rgba(166, 108, 255, 0.2), rgba(108, 218, 238, 0.1));
-            color: var(--cyber-blue);
+            border-radius: 0.8rem;
+            background: var(--primary);
+            color: white;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(166, 108, 255, 0.2);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
         }
     
         .input-area button:hover {
-            background: linear-gradient(135deg, rgba(166, 108, 255, 0.25), rgba(108, 218, 238, 0.15));
-            box-shadow: 0 0 25px rgba(166, 108, 255, 0.1);
+            background: rgba(108, 99, 255, 0.8);
+            transform: translateY(-1px);
+        }
+
+        .input-area button:active {
+            transform: translateY(0);
+        }
+
+        .footer {
+            padding: 0.8rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(30, 30, 30, 0.9);
         }
     
         @keyframes messageAppear {
             from {
                 opacity: 0;
-                transform: translateY(1rem) scale(0.98);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-    
-        @keyframes grid-move {
-            to {
-                transform: translate(50%, 50%);
+                transform: translateY(0);
             }
         }
     
         @media (max-width: 768px) {
             .container {
-                border-radius: 0;
-                border: none;
-                max-width: 100%;
+                height: 95vh;
+                width: 95%;
+                border-radius: 8px;
             }
     
             .chatbox {
-                padding: 1.5rem;
+                padding: 1rem;
             }
     
             .chat-message {
                 max-width: 85%;
-                padding: 1rem 1.25rem;
+                padding: 0.8rem 1.2rem;
             }
     
             .input-area {
-                padding: 1rem;
+                padding: 0.8rem;
             }
     
             .input-area button {
-                padding: 0.75rem 1.5rem;
+                padding: 0.7rem 1.2rem;
             }
         }
     
         @media (max-width: 480px) {
+            .header {
+                padding: 0.8rem 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
             .chat-message {
                 max-width: 90%;
+                font-size: 0.9rem;
             }
     
             .input-area input {
-                padding: 0.75rem 1rem;
+                padding: 0.7rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .input-area button {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .footer {
+                font-size: 0.7rem;
             }
         }
     </style>
@@ -193,12 +222,19 @@
 <body>
     
     <div class="container">
+        <div class="header">
+            <i class="fas fa-robot logo"></i>
+            <h1>AI Chat Assistant</h1>
+        </div>
         <div id="chatbox" class="chatbox"></div>
         <div class="input-area">
-            <input id="chatInput" type="text" placeholder="Type your message" />
+            <input id="chatInput" type="text" placeholder="Type your message..." />
             <button id="sendButton">
                 <span class="material-icons">send</span> Send
             </button>
+        </div>
+        <div class="footer">
+            Made with ❤️ by <a href="https://sawwqib.vercel.app">Saqib</a>
         </div>
     </div>
 
@@ -241,6 +277,13 @@
 
         chatInput.focus();
 
+        // Allow sending with Enter key
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
         sendButton.addEventListener('click', async () => {
             const message = chatInput.value.trim();
             if (!message) return;
@@ -261,9 +304,9 @@
                 } 
             } catch (error) {
                 console.error('Error:', error);
-displayMessage('An error occurred. Please try again.', false);
-}
-});
-</script> 
+                displayMessage('An error occurred. Please try again.', false);
+            }
+        });
+    </script> 
 </body> 
 </html>
